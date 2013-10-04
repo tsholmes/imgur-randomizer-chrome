@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+
+  "name": "Imgur Randomizer",
+  "description": "Displays random Imgur images",
+  "version": "0.1",
+
+  "permissions": [
+    "storage"
+  ],
+
+  "options_page": "randomizer.html"
+}
+
+
+
