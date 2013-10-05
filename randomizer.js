@@ -17,7 +17,8 @@ function randomChar() {
 
 function randomId() {
   var id = "";
-  for (var i = 0; i < 5; i++) {
+  var len = parseInt(Math.random() * Math.random() * 3) + 5;
+  for (var i = 0; i < len; i++) {
     id += randomChar();
   }
   return id;
@@ -31,12 +32,11 @@ function loadNextImage() {
 
 
   var img = new Image();
-  img.src = url;
 
   var onloaded = function() {
     if (!loaded) {
       loaded = true;
-      if (!((img.width==198 && img.height==160) || (img.width==161 && img.height==81) || img.width < 20 || img.height < 20)) {
+      if (!((img.width==198 && img.height==160) || (img.width==161 && img.height==81) || img.width < 33 || img.height < 33)) {
         imglist.push(img);
         if (imgel.src == "") {
           moveToNext();
@@ -51,10 +51,24 @@ function loadNextImage() {
   }
 
   img.onload = onloaded;
+  img.src = url;
 
   if (img.complete) {
     onloaded();
   }
+
+  setTimeout(function(){
+    if (img.complete) {
+      onloaded();
+    }
+  },100);
+
+  setTimeout(function(){
+    if (!loaded) {
+      loaded = true;
+      loadNextImage();
+    }
+  },5000);
 }
 
 function moveToNext() {
