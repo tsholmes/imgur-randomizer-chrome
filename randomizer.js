@@ -8,6 +8,9 @@ var imglist = [];
 
 var running = 0;
 
+var lastImg = new Image();
+var curImg = new Image();
+
 function randomChar() {
   return __charset[parseInt(Math.random()*__charset.length)];
 }
@@ -55,22 +58,57 @@ function loadNextImage() {
 }
 
 function moveToNext() {
+  if (imglist.length == 0) {
+    if (running < 20) {
+      running++;
+      loadNextImage();
+    }
+    return;
+  }
+  lastImg = curImg;
+  curImg = imglist.shift();
+
   container.style.width = "auto";
-  imgel.src = imglist[0].src;
+  imgel.src = curImg.src;
   container.style.width = imgel.width + "px";
-  imglist.splice(0,1);
+
   if (running == 0) {
     running++;
     loadNextImage();
   }
 }
 
+function moveToLast() {
+  if (curImg == lastImg) {
+    return;
+  }
+  imglist.unshift(curImg);
+  curImg = lastImg;
+
+  container.style.width = "auto";
+  imgel.src = curImg.src;
+  container.style.width = imgel.width + "px";
+}
+
+function handleKey(e) {
+  if (e.keyIdentifier == "Right") {
+    moveToNext();
+  } else if (e.keyIdentifier == "Left") {
+    moveToLast();
+  } else if (e.keyIdentifier == "Down") {
+    var newwin = window.open(imgel.src,"_blank");
+    newwin.blur();
+    window.focus();
+  }
+}
+
 window.addEventListener('load',function(){
   imgel = document.getElementById("img");
   container = document.getElementById("container");
-  document.onclick = moveToNext;
+  document.onkeydown = handleKey;
   for (var x = 0; x < __threads; x++) {
     running++;
     loadNextImage();
   }
 },false);
+
